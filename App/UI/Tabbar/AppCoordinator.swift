@@ -13,23 +13,38 @@ import SwiftUI
 
 class AppCoordinator: NSObject {
     private let window: UIWindow
-    private let tabbbar = UITabBarController()
+    private let tabBar = TabBar.shared
 
     private let curiosityCoordinator = CuriosityCoordinator()
     private let goalsCoordinator = GoalsCoordinator()
     private let dreamsCoordinator = DreamsCoordinator()
 
+    private let navVC: UINavigationController = {
+      let view = UINavigationController()
+      view.isNavigationBarHidden = false
+      return view
+    }()
+
     init(window: UIWindow) {
         self.window = window
         super.init()
-        window.rootViewController = tabbbar
 
-        tabbbar.viewControllers = [
-            curiosityCoordinator.container,
-            goalsCoordinator.container,
-            dreamsCoordinator.container
-        ]
-        tabbbar.tabBar.backgroundColor = .brown
+        window.rootViewController = navVC
         window.makeKeyAndVisible()
+
+        navVC.setViewControllers([curiosityCoordinator.container], animated: false)
+
+        tabBar.publisher
+          .sink { [self] event in
+            switch event {
+            case .curiosity:
+              navVC.setViewControllers([self.curiosityCoordinator.container], animated: false)
+            case .dream:
+              navVC.setViewControllers([self.dreamsCoordinator.container], animated: false)
+            case .goal:
+              navVC.setViewControllers([self.goalsCoordinator.container], animated: false)
+            }
+          }
+          .store(in: &disposable)
     }
 }
