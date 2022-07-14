@@ -2,10 +2,14 @@ import SwiftUI
 
 struct GoalsCardView: View {
 
-  let model: GoalsCardModel
+  @State var model: GoalsCardModel
+  let goalsManager = GoalsManager.shared
 
   var body: some View {
     RoundedRectangle(cornerRadius: 19)
+      .onTapGesture {
+        goalsManager.publisher.send(.tapOnCard(model.id))
+      }
       .overlay() {
         GeometryReader { geometry in
           VStack(alignment: .center, spacing: 12) {
@@ -22,35 +26,42 @@ struct GoalsCardView: View {
               screentWidth: geometry.size.width,
               model: model.progressBarModel
             )
-            VStack(alignment: .leading, spacing: 8) {
-              ForEach(model.tasks) { task in
-                HStack {
-                  ZStack {
-                    Circle()
-                      .stroke(lineWidth: 2)
-                      .frame(width: 18, height: 18)
-                      .foregroundColor(.white)
-                    if task.isCompleted {
+              .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
+            ScrollView {
+              VStack(alignment: .leading, spacing: 8) {
+                ForEach(model.tasks) { task in
+                  HStack {
+                    ZStack {
                       Circle()
-                        .frame(width: 10, height: 10)
+                        .stroke(lineWidth: 2)
+                        .frame(width: 18, height: 18)
                         .foregroundColor(.white)
+                      if task.isCompleted {
+                        Circle()
+                          .frame(width: 10, height: 10)
+                          .foregroundColor(.white)
+                      }
                     }
+                    Spacer(minLength: 18)
+                    Text(task.name)
+                      .foregroundColor(
+                        task.isCompleted
+                          ? Color(VdohnovitelyAsset.mutedTextColor.color)
+                          : Color(VdohnovitelyAsset.mainTextWhiteColor.color)
+                      )
+                      .strikethrough(task.isCompleted)
+                      .frame(maxWidth: .infinity, alignment: .leading)
+                    Spacer(minLength: 10)
+                    Text(task.deadLineDate)
+                      .foregroundColor(task.taskTimeStatus.sectionColor)
                   }
-                  Spacer(minLength: 18)
-                  Text(task.name)
-                    .foregroundColor(
-                      task.isCompleted
-                        ? Color(VdohnovitelyAsset.mutedTextColor.color)
-                        : Color(VdohnovitelyAsset.mainTextWhiteColor.color)
-                    )
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                  Spacer(minLength: 10)
-                  Text(task.deadLineDate)
-                    .foregroundColor(task.taskTimeStatus.sectionColor)
+                  .onTapGesture {
+                    goalsManager.publisher.send(.tapOnTask(task.id))
+                  }
                 }
               }
+              .padding()
             }
-            .padding()
           }
           .padding(EdgeInsets(top: 16, leading: 18, bottom: 16, trailing: 18))
         }
