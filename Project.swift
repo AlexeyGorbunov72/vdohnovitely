@@ -38,7 +38,8 @@ let project = Project(
             resources: ["Resources/**"],
             dependencies: [
                 .external(name: "SnapKit"),
-                .external(name: "Alamofire")
+                .external(name: "Alamofire"),
+                .external(name: "FirebaseAuth")
             ]
         )
     ]
