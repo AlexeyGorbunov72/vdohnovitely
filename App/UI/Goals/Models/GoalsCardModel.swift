@@ -27,5 +27,21 @@ extension GoalsCardModel {
             .stub4
         ]
     )
+
+    static let stub2 = GoalsCardModel(
+        id: 2,
+        name: "100 Отжиманий до 5 июля",
+        createDate: "14.06",
+        tasks: [
+            .stub1,
+            .stub2,
+            .stub3,
+            .stub4,
+            .stub1,
+            .stub2,
+            .stub3,
+            .stub4
+        ]
+    )
 }
 
