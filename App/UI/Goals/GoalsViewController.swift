@@ -11,7 +11,7 @@ final class GoalsViewController: UIViewController {
     )
 
     let goalsScreen = UIHostingController(
-        rootView: GoalsScreen(model: [.stub2, .stub, .stub2]) // Передавать реальные данные
+        rootView: GoalsScreen(model: [.stub2, .stub, .stub3]) // Передавать реальные данные
     )
     
     override func viewDidLoad() {
