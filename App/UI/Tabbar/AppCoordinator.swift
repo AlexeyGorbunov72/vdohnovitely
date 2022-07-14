@@ -22,13 +22,8 @@ class AppCoordinator: NSObject {
     init(window: UIWindow) {
         self.window = window
         super.init()
-        window.rootViewController = tabbbar
+        window.rootViewController = EditorViewController()
 
-        tabbbar.viewControllers = [
-            curiosityCoordinator.container,
-            goalsCoordinator.container,
-            dreamsCoordinator.container
-        ]
         tabbbar.tabBar.backgroundColor = .brown
         window.makeKeyAndVisible()
     }
