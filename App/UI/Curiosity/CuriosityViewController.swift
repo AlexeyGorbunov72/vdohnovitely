@@ -8,10 +8,6 @@ final class CuriosityViewController: UIViewController {
         rootView: TabBarView()
     )
 
-    let carouselView = UIHostingController(
-        rootView: CarouselContentView()
-    )
-
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
@@ -20,15 +16,5 @@ final class CuriosityViewController: UIViewController {
 
     private func configure() {
         setGradientBackground()
-
-        add(carouselView)
-        carouselView.view.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
-            make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
-        }
-
-        carouselView.view.backgroundColor = .clear
     }
 }
