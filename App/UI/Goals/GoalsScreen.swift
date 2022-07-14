@@ -5,7 +5,7 @@ struct GoalsScreen: View {
   @State var model: [GoalsCardModel]
 
   var body: some View {
-    ScrollView {
+    ScrollView(showsIndicators: false) {
       ForEach(model) { card in
         GoalsCardView(model: card)
           .padding(EdgeInsets(top: 14, leading: 20, bottom: 14, trailing: 20))
