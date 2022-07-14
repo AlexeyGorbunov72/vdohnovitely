@@ -7,12 +7,10 @@ struct AuthorizationView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [.red, .blue],
-                startPoint: UnitPoint(x: 0, y: 0),
-                endPoint: UnitPoint(x: 0, y: 1)
-            )
-            .padding(-50)
+            Image(uiImage: VdohnovitelyAsset.authBackgroundImage.image)
+                .resizable()
+                .padding([.top, .bottom], -100)
+
 
             VStack(alignment: .center) {
                 VStack(alignment: .leading) {
@@ -26,10 +24,14 @@ struct AuthorizationView: View {
                             Image(systemName: "person.fill")
                                 .foregroundColor(.white)
 
-                            TextField("введите логин", text: $loginText)
+                            TextField("", text: $loginText)
                                 .foregroundColor(.white)
                                 .disableAutocorrection(true)
                                 .accentColor(.white)
+                                .placeholder(when: loginText.isEmpty) {
+                                    Text("введите логин")
+                                        .foregroundColor(Color(VdohnovitelyAsset.textFiledPlaceholderColor.color))
+                                }
                         }
 
                         Color(.gray)
@@ -43,10 +45,14 @@ struct AuthorizationView: View {
                             Image(systemName: "lock.fill")
                                 .foregroundColor(.white)
 
-                            SecureField("введите пароль", text: $passwordText)
+                            SecureField("", text: $passwordText)
                                 .foregroundColor(.white)
                                 .disableAutocorrection(true)
                                 .accentColor(.white)
+                                .placeholder(when: passwordText.isEmpty) {
+                                    Text("введите пароль")
+                                        .foregroundColor(Color(VdohnovitelyAsset.textFiledPlaceholderColor.color))
+                                }
                         }
 
                         Color(.gray)
@@ -59,24 +65,43 @@ struct AuthorizationView: View {
                 Button {
                     print("ок")
                 } label: {
-                    Text("Логин")
+                    Text("войти")
                         .padding([.leading, .trailing], 130)
                         .padding([.top, .bottom], 10)
                         .foregroundColor(.white)
-                        .background(.purple)
+                        .background(Color(VdohnovitelyAsset.loginButtonColor.color))
                         .cornerRadius(10)
                 }
+                .padding([.bottom], 10)
 
-                Button {
-                    print("fgknfgklj")
-                } label: {
-                    Text("зарегестрироваться")
+                HStack(spacing: 3) {
+                    Text("Еще нет аккаунта?")
                         .foregroundColor(.white)
-                }
+                        .font(Font.system(size: 12))
 
+                    Button {
+                        print("fgknfgklj")
+                    } label: {
+                        Text("Зарегестрироваться")
+                            .foregroundColor(.yellow)
+                            .font(Font.system(size: 12))
+                    }
+                }
             }
         }
     }
 }
 
 
+extension View {
+    func placeholder<Content: View>(
+        when shouldShow: Bool,
+        alignment: Alignment = .leading,
+        @ViewBuilder placeholder: () -> Content) -> some View {
+
+            ZStack(alignment: alignment) {
+                placeholder().opacity(shouldShow ? 1 : 0)
+                self
+            }
+        }
+}
