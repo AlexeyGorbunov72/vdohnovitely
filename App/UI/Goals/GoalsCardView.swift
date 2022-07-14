@@ -27,7 +27,7 @@ struct GoalsCardView: View {
               model: model.progressBarModel
             )
               .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
-            ScrollView {
+            ScrollView(showsIndicators: false) {
               VStack(alignment: .leading, spacing: 8) {
                 ForEach(model.tasks) { task in
                   HStack {
