@@ -1,7 +1,12 @@
 import SwiftUI
+import Firebase
+
 
 struct AuthorizationView: View {
 
+    weak var delegate: AuthorizationListener?
+
+    @State var isRegistration = false
     @State var loginText = ""
     @State var passwordText = ""
 
@@ -14,7 +19,7 @@ struct AuthorizationView: View {
 
             VStack(alignment: .center) {
                 VStack(alignment: .leading) {
-                    Text("Логин")
+                    Text(isRegistration ? "Регистрация" : "Логин")
                         .font(Font.largeTitle.bold())
                         .foregroundColor(.white)
                         .padding([.bottom], 60)
@@ -63,7 +68,21 @@ struct AuthorizationView: View {
                 .padding([.bottom], 40)
 
                 Button {
-                    print("ок")
+                    if isRegistration {
+                        Auth.auth().createUser(
+                            withEmail: loginText,
+                            password: passwordText
+                        ) { result, error in
+                            delegate?.authorizationIsEnded()
+                        }
+                    } else {
+                        Auth.auth().signIn(
+                            withEmail: loginText,
+                            password: passwordText
+                        ) { result, error in
+                            delegate?.authorizationIsEnded()
+                        }
+                    }
                 } label: {
                     Text("войти")
                         .padding([.leading, .trailing], 130)
@@ -74,17 +93,19 @@ struct AuthorizationView: View {
                 }
                 .padding([.bottom], 10)
 
-                HStack(spacing: 3) {
-                    Text("Еще нет аккаунта?")
-                        .foregroundColor(.white)
-                        .font(Font.system(size: 12))
-
-                    Button {
-                        print("fgknfgklj")
-                    } label: {
-                        Text("Зарегестрироваться")
-                            .foregroundColor(.yellow)
+                if !isRegistration {
+                    HStack(spacing: 3) {
+                        Text("Еще нет аккаунта?")
+                            .foregroundColor(.white)
                             .font(Font.system(size: 12))
+
+                        Button {
+                            isRegistration = true
+                        } label: {
+                            Text("Зарегестрироваться")
+                                .foregroundColor(.yellow)
+                                .font(Font.system(size: 12))
+                        }
                     }
                 }
             }
