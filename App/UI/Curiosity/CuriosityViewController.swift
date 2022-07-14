@@ -15,6 +15,6 @@ final class CuriosityViewController: UIViewController {
     }
 
     private func configure() {
-        view.backgroundColor = .yellow
+        setGradientBackground()
     }
 }

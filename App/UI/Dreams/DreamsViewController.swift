@@ -15,6 +15,6 @@ final class DreamsViewController: UIViewController {
     }
 
     private func configure() {
-        view.backgroundColor = .purple
+        setGradientBackground()
     }
 }
