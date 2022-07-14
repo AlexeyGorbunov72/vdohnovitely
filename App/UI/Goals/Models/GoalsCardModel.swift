@@ -5,13 +5,16 @@ import UIKit
 struct GoalsCardModel: Identifiable {
     let id: Int
     let name: String
-    let createDate: String
-    let tasks: [GoalsTaskModel]
+    let createDate: String?
+    let tasks: [GoalsTaskModel]?
 }
 
 extension GoalsCardModel {
     var progressBarModel: GoalsProgressBarModel {
-        GoalsProgressBarModel(timeStatuses: self.tasks.map{ $0.taskTimeStatus } )
+        guard let tasksArr = self.tasks else {
+            return GoalsProgressBarModel(timeStatuses: [])
+        }
+        return GoalsProgressBarModel(timeStatuses: tasksArr.map{ $0.taskTimeStatus } )
     }
 }
 
@@ -42,6 +45,13 @@ extension GoalsCardModel {
             .stub3,
             .stub4
         ]
+    )
+
+    static let stub3 = GoalsCardModel(
+        id: 3,
+        name: "100 Отжиманий до 5 июля",
+        createDate: nil,
+        tasks: nil
     )
 }
 

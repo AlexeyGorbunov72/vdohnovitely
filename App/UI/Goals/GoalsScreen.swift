@@ -17,6 +17,6 @@ struct GoalsScreen: View {
 
 struct GoalsScreen_Previews: PreviewProvider {
   static var previews: some View {
-    GoalsScreen(model: [.stub2, .stub, .stub])
+    GoalsScreen(model: [.stub2, .stub, .stub, .stub3])
   }
 }

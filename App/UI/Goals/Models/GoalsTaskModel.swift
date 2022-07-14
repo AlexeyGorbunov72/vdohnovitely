@@ -14,7 +14,7 @@ struct GoalsTaskModel: Identifiable {
 
     let id: Int
     let name: String
-    let deadLineDate: String
+    let deadLineDate: String?
     let taskTimeStatus: TaskTimeStatus
     let isCompleted: Bool
 }
