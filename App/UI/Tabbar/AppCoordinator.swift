@@ -29,16 +29,19 @@ class AppCoordinator: NSObject, AuthorizationListener {
         window.makeKeyAndVisible()
     }
 
+    var vc: UIHostingController<TextFormatterMenu>? = nil
+    var a: EditorViewController?
     init(window: UIWindow) {
         self.window = window
         super.init()
-        window.rootViewController = EditorViewController()
-
+        let a = EditorViewController()
+        window.rootViewController = a
+        self.a = a
 
 
 //        showAuthorization(window: window)
         
-        window.rootViewController = navVC
+//        window.rootViewController = navVC
         window.makeKeyAndVisible()
 
         navVC.setViewControllers([curiosityCoordinator.container], animated: false)

@@ -1,34 +1,134 @@
 import SwiftUI
+import LinkPresentation
+
+typealias Action = () -> Void
 
 struct EditorView: View {
 
-    @State var blocks: [TextModel] = [
-        .body,
-        .subheader,
-        .header,
-        .name
-    ]
+    @ObservedObject var blocks: Blocks
 
-    @State var anus: String = ""
+    let onTextFormattingTapped: Action?
+    let onListTapped: Action?
+    let onCapturePhoto: Action?
+    let onSelectPhoto: Action?
+    let onBackgroundTapped: Action?
+    let onSelectBlock: ((UUID) -> Void)?
+    let onEmptyDelete: ((UUID) -> Void)?
+    let onURLSFind: ((UUID, [URL]) -> Void)?
+
+    var ochko: some View {
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                ZStack {
+                    VStack(alignment: .leading, spacing: 5) {
+                        ForEach($blocks.blocks) { $block in
+                            makeBlock(from: $block)
+                                .onTapGesture {
+                                    onSelectBlock?(block.id)
+                                }
+                        }
+
+                        Rectangle()
+                            .foregroundColor(Color(Color.RGBColorSpace.sRGB, red: 0.0001, green: 0.0001, blue: 0.0001, opacity: 0.0001))
+                            .frame(width: UIScreen.main.bounds.width - 20, height: UIScreen.main.bounds.height, alignment: .center)
+                            .onTapGesture {
+                                onBackgroundTapped?()
+                            }
+                    }
+                    .padding(.leading, 10)
+                    .padding(.trailing, 10)
+                }
+            }
+            .frame(maxWidth: UIScreen.main.bounds.width, alignment: .topLeading)
+            .padding()
+
+            Color(.purple)
+                .contentShape(Rectangle())
+                .frame(minHeight: 40, maxHeight: 40, alignment: .bottom)
+                .overlay(alignment: .center) {
+                    HStack(alignment: .center, spacing: 10) {
+                        Spacer(minLength: 10)
+                        Image(uiImage: UIImage(systemName: "textformat")!)
+                            .frame(width: 35, height: 35, alignment: .center)
+                            .onTapGesture {
+                                onTextFormattingTapped?()
+                            }
+                        Spacer(minLength: 10)
+                        Image(uiImage: UIImage(systemName: "checklist")!)
+                            .frame(width: 35, height: 35, alignment: .center)
+                            .onTapGesture {
+                                onListTapped?()
+                            }
+                        Spacer(minLength: 10)
+                        
+                        Menu {
+                            Button(action: onSelectPhoto ?? {}) {
+                                  Label("Выбрать фото", systemImage: "photo.on.rectangle")
+                              }
+                            Button(action: onCapturePhoto ?? {}) {
+                                  Label("Снять фото", systemImage: "camera")
+                              }
+                          } label: {
+                              Image(systemName: "camera")
+                                  .foregroundColor(.black)
+                          }
+                        Spacer(minLength: 10)
+                    }
+                    .frame(minHeight: 40, maxHeight: 40, alignment: .bottom)
+                    .foregroundColor(.purple)
+                    .padding(.bottom, 7.5)
+                }
+
+        }
+    }
 
     var body: some View {
-        ZStack {
-            VStack(alignment: .leading, spacing: 5) {
-                ForEach(blocks) { block in
-//                    TextField("Залупа", text: $anus)
-//                    TextFactory.makeText(from: block, with: $anus)
-                    UltimateTextEditor(textModel: block)
-                }
-            }.frame(alignment: .topLeading)
-        }.frame(alignment: .topLeading)
-        
+        ochko
+    }
+
+    private func makeBlock(from block: Binding<Block>) -> some View {
+        switch block.typeBlock.wrappedValue {
+        case .checklist:
+            return AnyView(Rectangle())
+
+        case .image:
+            return AnyView(
+                Image(uiImage: block.imageBlock.wrappedValue!.image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: UIScreen.main.bounds.width - 20, alignment: .center)
+            )
+
+        case .text:
+            let textField = MultilineTextField(
+                text: block.textBlock,
+                onCommit: { onEmptyDelete?(block.id) },
+                onURLFinds: { onURLSFind?(block.id, $0) }
+            )
+            return AnyView(textField)
+
+        case .link:
+            return AnyView(LinkViewRepresentable(metadata: block.linksBlock.wrappedValue!.metadata))
+        }
     }
 }
 
-struct EditorView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditorView()
-    }
+
+
+struct ChecklistView: View {
+
+//    @
+//
+//    var body: some View {
+//        VStack(alignment: .leading, spacing: 3) {
+//            ForEach(block.points) { model in
+//                HStack(alignment: .center, spacing: 3) {
+//                    Image(systemName: model.isDone ? "circle.circle.fill" : "circle")
+//                    MultilineTextField(text: model.$text, onCommit: nil, onURLFinds: nil)
+//                }
+//            }
+//        }
+//    }
 }
 
 enum EditorBlock {
@@ -162,19 +262,20 @@ struct UltimateTextEditor: UIViewRepresentable {
     typealias UIViewType = UIUltimateTextView
 
     let textModel: TextModel
-
+    var onFinish: (() -> Void)?
     public func makeUIView(context: Context) -> UIViewType {
-
-        UIUltimateTextView()
+        UIUltimateTextView(textModel, onFinish: onFinish)
     }
 
     public func updateUIView(_ uiView: UIViewType, context: Context) {
-        
+        print(uiView)
+        print(context)
     }
-
 }
 
-final class UIUltimateTextView: UITextView {
+final class UIUltimateTextView: UITextView, UITextViewDelegate {
+
+    private var onFinish: (() -> Void)?
 
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
@@ -185,14 +286,30 @@ final class UIUltimateTextView: UITextView {
         super.init(coder: aDecoder)
         common()
     }
-    
+    override public func deleteBackward() {
+        if attributedText.length < 1 {
+             onFinish?()
+        }
+        // do something for every backspace
+        super.deleteBackward()
+    }
     private func common() {
         font = .systemFont(ofSize: 26)
         textColor = .black
         allowsEditingTextAttributes = true
-        UIMenuController.shared.menuItems = [
-            .init(title: "Аа", action: #selector(changeFont(_:)))
-        ]
+        backgroundColor = .purple
+        delegate = self
+        isScrollEnabled = false
+//        UIMenuController.shared.menuItems = [
+//            .init(title: "Аа", action: #selector(changeFont(_:)))
+//        ]
+    }
+
+    init(_ model: TextModel, onFinish: (() -> Void)?) {
+        super.init(frame: .zero, textContainer: nil)
+        applyModel(model)
+        self.onFinish = onFinish
+        common()
     }
 
     func applyModel(_ model: TextModel) {
@@ -211,13 +328,10 @@ final class UIUltimateTextView: UITextView {
         }
     }
 
+    var hideMenu = false
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         let menuController = UIMenuController.shared
-        if whiteList == Selector.initialWhiteList {
-            if action.description == "_showTextStyleOptions:" {
-                return true
-            }
-        }
+   
         if var menuItems = menuController.menuItems,
             (menuItems.map { $0.action }).elementsEqual([.toggleBoldface, .toggleItalics, .toggleUnderline]) {
             // The font style menu is about to become visible
@@ -226,21 +340,22 @@ final class UIUltimateTextView: UITextView {
             menuController.menuItems = menuItems
             return true
         }
+        return super.canPerformAction(action, withSender: sender)
+
+        if action.description == "_showTextStyleOptions:" && !hideMenu {
+            whiteList = [
+                Selector.toggleBoldface,
+                Selector.toggleUnderline,
+                Selector.toggleItalics
+            ]
+            return true
+        }
+
         guard whiteList.contains(where: { $0 == action }) else {
             return false
         }
 
         return super.canPerformAction(action, withSender: sender)
-    }
-
-    @objc
-    func fuck() {
-        print("Половой хуй")
-    }
-
-    @objc
-    func toggleStrikethrough(_ sender: UITextView) {
-        print("Половой хуй")
     }
 
     @objc
@@ -262,6 +377,9 @@ final class UIUltimateTextView: UITextView {
     @objc
     func becameName(_ sender: UITextView) {
         font = .boldSystemFont(ofSize: 30)
+        UIMenuController.shared.menuItems = [
+            .init(title: "Аа", action: #selector(changeFont(_:)))
+        ]
         UIMenuController.shared.update()
         whiteList = Selector.initialWhiteList
     }
@@ -269,6 +387,9 @@ final class UIUltimateTextView: UITextView {
     @objc
     func becameHeader(_ sender: UITextView) {
         font = .systemFont(ofSize: 25)
+        UIMenuController.shared.menuItems = [
+            .init(title: "Аа", action: #selector(changeFont(_:)))
+        ]
         UIMenuController.shared.update()
         whiteList = Selector.initialWhiteList
     }
@@ -276,6 +397,9 @@ final class UIUltimateTextView: UITextView {
     @objc
     func becameSubheader(_ sender: UITextView) {
         font = .systemFont(ofSize: 20)
+        UIMenuController.shared.menuItems = [
+            .init(title: "Аа", action: #selector(changeFont(_:)))
+        ]
         UIMenuController.shared.update()
         whiteList = Selector.initialWhiteList
     }
@@ -283,15 +407,34 @@ final class UIUltimateTextView: UITextView {
     @objc
     func becameBody(_ sender: UITextView) {
         font = .systemFont(ofSize: 15)
+        UIMenuController.shared.menuItems = [
+            .init(title: "Аа", action: #selector(changeFont(_:)))
+        ]
         UIMenuController.shared.update()
         whiteList = Selector.initialWhiteList
     }
 
+    @objc
+    func toggleStrikethrough(_ sender: UITextView) {
+        font = .systemFont(ofSize: 15)
+        UIMenuController.shared.menuItems = [
+            .init(title: "Аа", action: #selector(changeFont(_:)))
+        ]
+        UIMenuController.shared.update()
+        whiteList = Selector.initialWhiteList
+    }
     var whiteList: [Selector] = Selector.initialWhiteList
+
+//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+//        if let url = urlExists(attributedText.string) {
+//            print(url)
+//        }
+//        return true
+//    }
 }
 
 
-private extension Selector {
+extension Selector {
     static let initialWhiteList: [Selector] = [
         .cut,
         .paste,
@@ -318,11 +461,36 @@ private extension Selector {
     static let toggleStrikethrough = #selector(UIUltimateTextView.toggleStrikethrough(_:))
     static let cut = #selector(UIUltimateTextView.cut(_:))
     static let paste = #selector(UIUltimateTextView.paste(_:))
-    static let fuck = #selector(UIUltimateTextView.fuck)
     static let select = #selector(UIUltimateTextView.select(_:))
     static let changeFont = #selector(UIUltimateTextView.changeFont(_:))
     static let becameName = #selector(UIUltimateTextView.becameName(_:))
     static let becameHeader = #selector(UIUltimateTextView.becameHeader(_:))
     static let becameSubheader = #selector(UIUltimateTextView.becameSubheader(_:))
     static let becameBody = #selector(UIUltimateTextView.becameBody(_:))
+}
+
+extension UIApplication {
+    func endEditing() {
+        UIApplication.shared.keyWindow?.endEditing(true)
+    }
+}
+
+class CustomLinkView: LPLinkView {
+    override var intrinsicContentSize: CGSize { CGSize(width: 0, height: super.intrinsicContentSize.height) }
+}
+
+struct LinkViewRepresentable: UIViewRepresentable {
+ 
+    typealias UIViewType = CustomLinkView
+    
+    var metadata: LPLinkMetadata?
+ 
+    func makeUIView(context: Context) -> CustomLinkView {
+        guard let metadata = metadata else { return CustomLinkView() }
+        let linkView = CustomLinkView(metadata: metadata)
+        return linkView
+    }
+ 
+    func updateUIView(_ uiView: CustomLinkView, context: Context) {
+    }
 }
