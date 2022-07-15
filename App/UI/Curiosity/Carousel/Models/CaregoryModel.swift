@@ -1,6 +1,6 @@
 import Foundation
 
-let model = CaregoryModel(
+let SuperModel = CaregoryModel(
     id: 0,
     title: "Sound design",
     text: "Мы постоянно окружены звуками: повседневные дела, кино, телевидение или радиовещание. Звук – это одна из важнейших частей нашего восприятия окружающей среды, нашей картины мира.",
@@ -74,8 +74,8 @@ let model = CaregoryModel(
     ]
 )
 
-let categories = [
-    model,
+let SuperCategories = [
+    SuperModel,
     CaregoryModel(
         id: 1,
         title: "Исскуство",

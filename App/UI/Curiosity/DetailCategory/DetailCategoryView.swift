@@ -222,3 +222,9 @@ struct DetailCategoryView: View {
         .background(.clear)
     }
 }
+
+struct DetailCategoryView_Previews: PreviewProvider {
+    static var previews: some View {
+        DetailCategoryView(category: SuperModel)
+    }
+}
