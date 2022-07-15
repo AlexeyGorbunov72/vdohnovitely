@@ -14,7 +14,8 @@ let sceneDelegate: [String: InfoPlist.Value] = [
                 ])
             ])
         ])
-    ])
+    ]),
+    "Privacy - Camera Usage Description": .string("Нужно чтобы ты мог запечатлить свои мечты!")
 ]
 
 let launchScreen: [String: InfoPlist.Value] = [
