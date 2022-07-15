@@ -97,7 +97,7 @@ struct EditorView: View {
     private func makeBlock(from block: Binding<Block>) -> some View {
         switch block.typeBlock.wrappedValue {
         case .checklist:
-            return AnyView(Rectangle())
+            return AnyView(ChecklistView(block: block.checklistBlock))
 
         case .image:
             return AnyView(
@@ -123,21 +123,21 @@ struct EditorView: View {
 
 
 
-//struct ChecklistView: View {
+struct ChecklistView: View {
 
-//    @
-//
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 3) {
-//            ForEach(block.points) { model in
-//                HStack(alignment: .center, spacing: 3) {
-//                    Image(systemName: model.isDone ? "circle.circle.fill" : "circle")
-//                    MultilineTextField(text: model.$text, onCommit: nil, onURLFinds: nil)
-//                }
-//            }
-//        }
-//    }
-//}
+    @Binding var block: ChecklistBlock
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            ForEach($block.points) { $model in
+                HStack(alignment: .center, spacing: 3) {
+                    Image(systemName: model.isDone ? "circle.circle.fill" : "circle")
+                    MultilineTextField(text: $model.text, onCommit: nil, onURLFinds: nil)
+                }
+            }
+        }
+    }
+}
 
 enum EditorBlock {
 

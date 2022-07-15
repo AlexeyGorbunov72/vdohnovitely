@@ -4,16 +4,17 @@ import Combine
 import SwiftUI
 //import Firebase
 
-protocol AuthorizationListener: AnyObject {
+//protocol AuthorizationListener: AnyObject {
+//
+//    func authorizationIsEnded()
+//}
 
-    func authorizationIsEnded()
-}
-
-class AppCoordinator: NSObject, AuthorizationListener {
+class AppCoordinator: NSObject{ //, AuthorizationListener {
     private let window: UIWindow
     private let tabBar = TabBar.shared
 
    // private var authView = AuthorizationView()
+
     private let curiosityCoordinator = CuriosityCoordinator()
     private let goalsCoordinator = GoalsCoordinator()
     private let dreamsCoordinator = DreamsCoordinator()

@@ -65,7 +65,7 @@ struct LinkBlock {
 }
 
 class ChecklistBlock {
-    let points: [ChecklistItem]
+    var points: [ChecklistItem]
 
     init(points: [ChecklistItem]) {
         self.points = points
@@ -73,9 +73,9 @@ class ChecklistBlock {
 }
 
 struct ChecklistItem: Identifiable {
-    let id: UUID
-    let text: TextBlock
-    let isDone: Bool
+    var id: UUID
+    var text: TextBlock
+    var isDone: Bool
 
     init(id: UUID, text: TextBlock, isDone: Bool) {
         self.id = id
