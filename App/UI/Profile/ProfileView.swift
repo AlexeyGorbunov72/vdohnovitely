@@ -56,7 +56,7 @@ struct ProfileView: View {
               }
             }
           }
-          .frame(width: .infinity, height: 106, alignment: .center)
+          .frame(width: .infinity, height: 106)
           .foregroundColor(Color(VdohnovitelyAsset.cardBackgroundColor.color))
 
         Text("Пожалуйста, добавьте имя и фотографию")
@@ -72,7 +72,7 @@ struct ProfileView: View {
         RoundedRectangle(cornerRadius: 19)
           .padding([.trailing, .leading], 30)
           .foregroundColor(Color(VdohnovitelyAsset.cardBackgroundColor.color))
-          .frame(width: .infinity, height: 106, alignment: .center)
+          .frame(width: .infinity, height: 106)
           .overlay {
             MultilineTextFieldProfile(
               "Расскажите о себе, своих целях и мечтах",
@@ -144,7 +144,7 @@ struct ProfileView: View {
         RoundedRectangle(cornerRadius: 19)
           .padding([.trailing, .leading], 30)
           .foregroundColor(Color(VdohnovitelyAsset.cardBackgroundColor.color))
-          .frame(width: .infinity, height: 168, alignment: .center)
+          .frame(width: .infinity, height: 168)
           .overlay(alignment: .leading) {
             HStack(alignment: .center) {
               GeometryReader { geometry in

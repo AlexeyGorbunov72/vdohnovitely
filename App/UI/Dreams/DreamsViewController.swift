@@ -26,6 +26,7 @@ final class DreamsViewController: UIViewController {
             }
             .store(in: &disposable)
 
+        configureNavBar()
         configure()
         configureTabBar(tabBarView)
     }
@@ -36,9 +37,31 @@ final class DreamsViewController: UIViewController {
         add(dreamScreen)
 
         dreamScreen.view.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
+            make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
         }
 
         dreamScreen.view.backgroundColor = .clear
+    }
+
+    private func configureNavBar() {
+        createCustomNavigationBar()
+
+        let title = createCustomTitleView(contactName: "Мечты")
+        let profileButton = createCustomButton(image: VdohnovitelyAsset.profileIcon.image, selector: #selector(openProfile))
+        let addDreamButton = createCustomButton(image: VdohnovitelyAsset.addIcon.image, selector: #selector(addDream))
+
+        navigationItem.rightBarButtonItems = [profileButton, addDreamButton]
+        navigationItem.titleView = title
+    }
+
+    @objc func openProfile() {
+        navigationController?.pushViewController(ProfileViewController(), animated: true)
+    }
+
+    @objc func addDream() {
+        
     }
 }

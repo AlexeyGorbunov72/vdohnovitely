@@ -20,7 +20,7 @@ class AppCoordinator: NSObject, AuthorizationListener {
 
     private let navVC: UINavigationController = {
       let view = UINavigationController()
-      view.isNavigationBarHidden = false
+      
       return view
     }()
 
