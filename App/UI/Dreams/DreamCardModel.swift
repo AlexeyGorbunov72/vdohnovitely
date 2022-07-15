@@ -19,19 +19,19 @@ struct DreamCardModel: Identifiable {
 extension DreamCardModel {
     static let stub = DreamCardModel(
         id: 1,
-        name: "Побывать во всех странах Европы Побывать во всех странах Европы Побывать во всех странах Европы",
-        image: nil
+        name: "Побывать во всех странах Европы",
+        image: UIImage(named: "dream1")
     )
 
     static let stub2 = DreamCardModel(
         id: 2,
-        name: "Побывать во всех странах Европы",
-        image: nil
+        name: "Сдать ЕГЭ на максимальный балл",
+        image: UIImage(named: "dream2")
     )
 
     static let stub3 = DreamCardModel(
         id: 3,
-        name: "Побывать во всех странах Европы",
-        image: nil
+        name: "Занять первое место на хакатоне",
+        image: UIImage(named: "dream3")
     )
 }

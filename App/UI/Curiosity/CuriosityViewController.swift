@@ -52,9 +52,9 @@ final class CuriosityViewController: UIViewController, CarouselViewProtocol {
 
         let title = createCustomTitleView(contactName: "Категории")
         let profileButton = createCustomButton(image: VdohnovitelyAsset.profileIcon.image, selector: #selector(openProfile))
-        let searchButton = createCustomButton(image: VdohnovitelyAsset.searchIcon.image, selector: #selector(searchCategory))
+        //let searchButton = createCustomButton(image: VdohnovitelyAsset.searchIcon.image, selector: #selector(searchCategory))
 
-        navigationItem.rightBarButtonItems = [profileButton, searchButton]
+        navigationItem.rightBarButtonItems = [profileButton]//, searchButton]
         navigationItem.titleView = title
     }
 

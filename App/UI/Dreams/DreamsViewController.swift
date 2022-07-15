@@ -11,7 +11,7 @@ final class DreamsViewController: UIViewController {
     )
 
     let dreamScreen = UIHostingController(
-      rootView: DreamScreen(model: [.stub, .stub2, .stub3, .stub, .stub, .stub])
+      rootView: DreamScreen(model: [.stub, .stub2, .stub3])
     )
     
     override func viewDidLoad() {
