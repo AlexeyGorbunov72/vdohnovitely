@@ -28,6 +28,8 @@ final class GoalsViewController: UIViewController {
             }
             .store(in: &disposable)
 
+
+        configureNavBar()
         configure()
         configureTabBar(tabBarView)
     }
@@ -38,10 +40,31 @@ final class GoalsViewController: UIViewController {
         add(goalsScreen)
 
         goalsScreen.view.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.edges.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.left.equalTo(view.safeAreaLayoutGuide.snp.left)
+            make.right.equalTo(view.safeAreaLayoutGuide.snp.right)
         }
 
         goalsScreen.view.backgroundColor = .clear
+    }
+
+    private func configureNavBar() {
+        createCustomNavigationBar()
+
+        let title = createCustomTitleView(contactName: "Цели")
+        let profileButton = createCustomButton(image: VdohnovitelyAsset.profileIcon.image, selector: #selector(openProfile))
+        let addGoalButton = createCustomButton(image: VdohnovitelyAsset.addIcon.image, selector: #selector(addGoal))
+
+        navigationItem.rightBarButtonItems = [profileButton, addGoalButton]
+        navigationItem.titleView = title
+    }
+
+    @objc func openProfile() {
+        navigationController?.pushViewController(ProfileViewController(), animated: true)
+    }
+
+    @objc func addGoal() {
+        
     }
 }
