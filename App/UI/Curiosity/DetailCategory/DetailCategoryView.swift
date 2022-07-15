@@ -1,66 +1,62 @@
 import Foundation
 import SwiftUI
 
+extension Array where Element : Equatable {
+    func index(of element: Element) -> Int? {
+        for (index, item) in self.enumerated() {
+            if item == element {
+                return index
+            }
+        }
+
+        return nil
+    }
+}
+
 struct DetailCategoryView: View {
 
-    var category = CaregoryModel(
-        id: 1,
-        title: "Спорт",
-        text: "gjdnglfndkgj",
-        imageName: "card",
-        topUsers: [
-            User(id: 1, login: "Алексей Попков", imageName: "card"),
-            User(id: 2, login: "Миша Пупкин", imageName: "card"),
-            User(id: 3, login: "Как какать", imageName: "card")
-        ],
-        links: [
-            Link(id: 1, link: "pornhub.com", description: "лутший сайт", imageName: "card"),
-            Link(id: 2, link: "pornhub.com", description: "лутший сайт", imageName: "card")
-        ],
-        conferences: [
-            Сonference(id: 1, title: "zoom", text: "ссылка туда", date: "21.12.2001", time: "11:30"),
-            Сonference(id: 2, title: "discord", text: "ссылка туда", date: "21.12.2021", time: "11:30"),
-            Сonference(id: 3, title: "zoom", text: "ссылка туда", date: "21.12.2008", time: "11:30")
-        ],
-        masterminds: [
-            User(id: 1, login: "Алексей Попков", imageName: "card"),
-            User(id: 2, login: "Миша Пупкин", imageName: "card"),
-            User(id: 3, login: "Как какать", imageName: "card")
-        ]
-    )
+    let category: CaregoryModel
 
     var body: some View {
 
         VStack(alignment: .leading) {
             Text(category.title)
-                .font(Font.largeTitle)
+                .font(Font.largeTitle.bold())
                 .foregroundColor(.white)
 
             Text(category.text)
                 .font(Font.body)
                 .foregroundColor(.white)
+                .padding([.top], 3)
 
             if !category.topUsers.isEmpty {
-                Text("Топ-5 пользователей")
-                    .font(Font.body)
-                    .foregroundColor(.white)
+                Text("Топ пользователей")
+                    .font(Font.headline.bold())
+                    .foregroundColor(.orange)
+                    .padding([.top], 7)
             }
 
             VStack {
                 ForEach(category.topUsers) { user in
 
                     ZStack {
-                        Color(.red)
+                        Color(VdohnovitelyAsset.cardBackgroundColor.color)
                             .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(
+                                        .orange,
+                                        lineWidth: category.topUsers.index(of: user)! == 0 ? 1 : 0)
+                            )
 
                         HStack(spacing: 20) {
-                            Text("1")
-                                .font(Font.title)
-                                .foregroundColor(.white)
+                            Text("\(category.topUsers.index(of: user)! + 1)")
+                                .font(Font.title2)
+                                .foregroundColor(category.topUsers.index(of: user)! == 0 ? .orange : .white)
                                 .padding([.leading], 15)
 
                             Color(.white)
-                                .frame(width: 2, height: 50)
+                                .frame(width: 1, height: 50)
 
                             Image(user.imageName)
                                 .resizable()
@@ -82,31 +78,34 @@ struct DetailCategoryView: View {
 
             if !category.links.isEmpty {
                 Text("Полезныйе ссылки")
-                    .font(Font.body)
-                    .foregroundColor(.white)
+                    .font(Font.headline.bold())
+                    .foregroundColor(.orange)
+                    .padding([.top], 30)
             }
 
             VStack {
                 ForEach(category.links) { link in
-
                     ZStack {
-                        Color(.red)
+                        Color(VdohnovitelyAsset.cardBackgroundColor.color)
                             .cornerRadius(10)
 
                         HStack(spacing: 20) {
                             Image(link.imageName)
                                 .resizable()
-                                .frame(width: 32, height: 32)
+                                .frame(width: 65, height: 65)
                                 .cornerRadius(16)
                                 .padding([.leading], 15)
 
-                            VStack {
-                                Text(link.link)
-                                    .font(Font.headline)
-                                    .foregroundColor(.white)
+                            VStack(alignment: .leading) {
+                                Link(destination: URL(string: link.urlString)!) {
+                                    Text(link.title)
+                                        .font(Font.headline)
+                                        .foregroundColor(.white)
+                                        .padding([.bottom], 2)
+                                }
 
                                 Text(link.description)
-                                    .font(Font.body)
+                                    .font(Font.caption)
                                     .foregroundColor(.white)
                             }
 
@@ -115,43 +114,62 @@ struct DetailCategoryView: View {
                         }
                     }
                     .frame(
-                        height: 50
+                        height: 80
                     )
                 }
             }
 
             if !category.conferences.isEmpty {
                 Text("Коференции")
-                    .font(Font.body)
-                    .foregroundColor(.white)
+                    .font(Font.headline.bold())
+                    .foregroundColor(.orange)
+                    .padding([.top], 30)
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(category.conferences) { conference in
                         ZStack {
-                            Color(.red)
+                            Color(VdohnovitelyAsset.cardBackgroundColor.color)
+                                .cornerRadius(10)
 
                             HStack {
                                 VStack(alignment: .leading) {
-                                    Text(conference.title)
-                                        .font(Font.headline)
+
+                                    Link(destination: URL(string: conference.urlString)!) {
+                                        Text(conference.title)
+                                            .font(Font.headline.bold())
+                                            .foregroundColor(.white)
+                                    }
 
                                     Text(conference.text)
-                                        .font(Font.body)
+                                        .font(Font.caption)
+                                        .foregroundColor(.white)
+                                        .padding([.top], 5)
 
                                     Spacer()
 
                                     HStack {
+                                        Image(systemName: "calendar")
+                                            .frame(width: 13, height: 13)
+                                            .foregroundColor(.white)
+
                                         Text(conference.date)
-                                            .font(Font.body)
+                                            .font(Font.caption)
+                                            .foregroundColor(.white)
 
                                         Spacer()
 
+                                        Image(systemName: "clock")
+                                            .frame(width: 13, height: 13)
+                                            .foregroundColor(.white)
+
                                         Text(conference.time)
-                                            .font(Font.body)
+                                            .font(Font.caption)
+                                            .foregroundColor(.white)
                                     }
                                 }
+                                .padding([.top, .bottom, .leading], 10)
 
                                 Spacer()
                             }
@@ -163,8 +181,9 @@ struct DetailCategoryView: View {
 
             if !category.masterminds.isEmpty {
                 Text("Вдохновители")
-                    .font(Font.body)
-                    .foregroundColor(.white)
+                    .font(Font.headline.bold())
+                    .foregroundColor(.orange)
+                    .padding([.top], 30)
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -173,20 +192,33 @@ struct DetailCategoryView: View {
                         ZStack {
                             Image(user.imageName)
                                 .resizable()
-                                .cornerRadius(16)
+                                .clipped()
 
-                            VStack {
+                            Color(.black.withAlphaComponent(0.5))
+
+                            VStack(alignment: .leading) {
                                 Spacer()
 
                                 Text(user.login)
-                                    .font(Font.headline)
+                                    .font(Font.headline.bold())
+                                    .foregroundColor(.white)
+
+                                Text(user.description)
+                                    .font(Font.body)
+                                    .foregroundColor(.white)
+                                    .padding([.bottom], 10)
                             }
+                            .padding([.leading, .trailing], 10)
 
                         }
                         .frame(width: 300, height: 300)
+                        .cornerRadius(16)
+
                     }
                 }
             }
-        }.padding([.leading, .trailing], 10)
+        }
+        .padding([.leading, .trailing], 10)
+        .background(.clear)
     }
 }
