@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Combine
 import SwiftUI
-import Firebase
+//import Firebase
 
 protocol AuthorizationListener: AnyObject {
 
@@ -13,14 +13,14 @@ class AppCoordinator: NSObject, AuthorizationListener {
     private let window: UIWindow
     private let tabBar = TabBar.shared
 
-    private var authView = AuthorizationView()
+   // private var authView = AuthorizationView()
     private let curiosityCoordinator = CuriosityCoordinator()
     private let goalsCoordinator = GoalsCoordinator()
     private let dreamsCoordinator = DreamsCoordinator()
 
     private let navVC: UINavigationController = {
       let view = UINavigationController()
-      view.isNavigationBarHidden = false
+      
       return view
     }()
 
