@@ -9,6 +9,7 @@ protocol CarouselViewProtocol: AnyObject {
 struct CarouselView: View {
 
     weak var delegate: CarouselViewProtocol?
+    @State var model: [CaregoryModel]
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -16,7 +17,7 @@ struct CarouselView: View {
                 Spacer()
                     .frame(width: 50)
 
-                ForEach(categories) { category in
+                ForEach(model) { category in
                     GeometryReader { proxy in
                         let scale = getScale(proxy: proxy)
                         VStack(spacing: 8) {

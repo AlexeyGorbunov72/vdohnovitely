@@ -9,16 +9,11 @@ final class CuriosityViewController: UIViewController, CarouselViewProtocol {
     )
 
     lazy var carouselView = UIHostingController(
-        rootView: CarouselContentView(delegate: self)
+        rootView: CarouselContentView(delegate: self, model: SuperCategories)
     )
 
     func showDetailView(category: CaregoryModel) {
-        let detailViewController = UIHostingController(
-            rootView: DetailCategoryContentView(category: category)
-        )
-
-        detailViewController.view.backgroundColor = .black
-        self.present(detailViewController, animated: true)
+        self.present(DetailViewController(category: category), animated: true)
     }
 
     override func viewDidLoad() {
