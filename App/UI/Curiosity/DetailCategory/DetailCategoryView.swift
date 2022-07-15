@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import LinkPresentation
 
 extension Array where Element : Equatable {
     func index(of element: Element) -> Int? {
@@ -16,24 +17,28 @@ extension Array where Element : Equatable {
 struct DetailCategoryView: View {
 
     let category: CaregoryModel
+    @State var redrawPreview = false
 
     var body: some View {
 
         VStack(alignment: .leading) {
-            Text(category.title)
-                .font(Font.largeTitle.bold())
-                .foregroundColor(.white)
 
-            Text(category.text)
-                .font(Font.body)
-                .foregroundColor(.white)
-                .padding([.top], 3)
+            Group {
+                Text(category.title)
+                    .font(Font.largeTitle.bold())
+                    .foregroundColor(.white)
 
-            if !category.topUsers.isEmpty {
-                Text("Топ пользователей")
-                    .font(Font.headline.bold())
-                    .foregroundColor(.orange)
-                    .padding([.top], 7)
+                Text(category.text)
+                    .font(Font.body)
+                    .foregroundColor(.white)
+                    .padding([.top], 3)
+
+                if !category.topUsers.isEmpty {
+                    Text("Топ пользователей")
+                        .font(Font.headline.bold())
+                        .foregroundColor(.orange)
+                        .padding([.top], 7)
+                }
             }
 
             VStack {
@@ -77,7 +82,7 @@ struct DetailCategoryView: View {
             }
 
             if !category.links.isEmpty {
-                Text("Полезныйе ссылки")
+                Text("Полезные ссылки")
                     .font(Font.headline.bold())
                     .foregroundColor(.orange)
                     .padding([.top], 30)
@@ -85,37 +90,7 @@ struct DetailCategoryView: View {
 
             VStack {
                 ForEach(category.links) { link in
-                    ZStack {
-                        Color(VdohnovitelyAsset.cardBackgroundColor.color)
-                            .cornerRadius(10)
-
-                        HStack(spacing: 20) {
-                            Image(link.imageName)
-                                .resizable()
-                                .frame(width: 65, height: 65)
-                                .cornerRadius(16)
-                                .padding([.leading], 15)
-
-                            VStack(alignment: .leading) {
-                                Link(destination: URL(string: link.urlString)!) {
-                                    Text(link.title)
-                                        .font(Font.headline)
-                                        .foregroundColor(.white)
-                                        .padding([.bottom], 2)
-                                }
-
-                                Text(link.description)
-                                    .font(Font.caption)
-                                    .foregroundColor(.white)
-                            }
-
-
-                            Spacer()
-                        }
-                    }
-                    .frame(
-                        height: 80
-                    )
+                    LinkRow(previewURL: URL(string: link.urlString)!, redraw: self.$redrawPreview)
                 }
             }
 
@@ -223,8 +198,27 @@ struct DetailCategoryView: View {
     }
 }
 
-struct DetailCategoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        DetailCategoryView(category: SuperModel)
+struct LinkRow : UIViewRepresentable {
+
+    var previewURL:URL
+    @Binding var redraw: Bool
+
+    func makeUIView(context: Context) -> LPLinkView {
+        let view = LPLinkView(url: previewURL)
+
+        let provider = LPMetadataProvider()
+        provider.startFetchingMetadata(for: previewURL) { (metadata, error) in
+            if let md = metadata {
+                DispatchQueue.main.async {
+                    view.metadata = md
+                    view.sizeToFit()
+                    self.redraw.toggle()
+                }
+            }
+        }
+
+        return view
     }
+
+    func updateUIView(_ view: LPLinkView, context: Context) {}
 }

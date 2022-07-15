@@ -13,17 +13,11 @@ let SuperModel = CaregoryModel(
     links: [
         LinkOnMaterial(
             id: 1,
-            title: "Sound design на Wiki",
-            urlString: "https://ru.wikipedia.org/wiki/%D0%97%D0%B2%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B9_%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD",
-            description: "Звуковой дизайн (саунд-дизайн) — это процесс определения, управления или создания звуковых элементов",
-            imageName: "soundDesign2"
+            urlString: "https://ru.wikipedia.org/wiki/%D0%97%D0%B2%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B9_%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD"
         ),
         LinkOnMaterial(
             id: 2,
-            title: "Язык звук. дизайна",
-            urlString: "https://wiki5.ru/wiki/Kyma_(sound_design_language)",
-            description: "Kyma - это язык визуального программирования для звукового дизайна",
-            imageName: "soundDesign3"
+            urlString: "https://www.youtube.com/watch?v=SSzbnDv6dwU"
         )
     ],
     conferences: [
@@ -122,10 +116,7 @@ struct CaregoryModel: Identifiable, Equatable {
 struct LinkOnMaterial: Identifiable, Equatable {
 
     let id: Int
-    let title: String
     let urlString: String
-    let description: String
-    let imageName: String
 }
 
 struct User: Identifiable, Equatable {
