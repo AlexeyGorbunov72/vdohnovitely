@@ -29,14 +29,14 @@ textField
 и в NSObject проперти `disposable: Set<AnyCancellable>` и теперь можно не добавлять по кд это приватное проперти
 ## UserDefaults
 
-Спиздел с статьи [Алмаза](https://medium.com/@almazrafi/key-value-containers-7a8312a7e432) решение и теперь можно писать так:
+Взял решение [Алмаза](https://medium.com/@almazrafi/key-value-containers-7a8312a7e432) и теперь можно писать так:
 
 ```swift
 extension UserDefaults {
     var labelTitle: KeyValueContainer<String> { make() }
 }
 ...
-UserDefaults.standard.labelTitle.value = "Хуй"
+UserDefaults.standard.labelTitle.value = "Текст"
 button.setTitle(UserDefaults.standard.labelTitle.value, for: .normal)
 ```
 
