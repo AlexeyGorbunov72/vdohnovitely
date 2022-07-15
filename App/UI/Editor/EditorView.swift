@@ -18,10 +18,17 @@ struct EditorView: View {
     let onFinish: Action?
 
     var ochko: some View {
+        
         ZStack(alignment: .bottom) {
             ScrollView {
                 ZStack {
                     VStack(alignment: .leading, spacing: 5) {
+                        Image(systemName: "xmark.circle")
+                            .frame(alignment: .topTrailing)
+                            .onTapGesture {
+                                onFinish?()
+                            }
+
                         ForEach($blocks.blocks) { $block in
                             makeBlock(from: $block)
                                 .onTapGesture {
@@ -116,7 +123,7 @@ struct EditorView: View {
 
 
 
-struct ChecklistView: View {
+//struct ChecklistView: View {
 
 //    @
 //
@@ -130,7 +137,7 @@ struct ChecklistView: View {
 //            }
 //        }
 //    }
-}
+//}
 
 enum EditorBlock {
 

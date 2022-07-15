@@ -12,6 +12,9 @@ final class EditorViewController: UIViewController, UIAdaptivePresentationContro
     var selectedBlockID: UUID!
     var blocks: Blocks!
     var textFormattingView: HateVc?
+    var onFinish: Action?
+
+    let dreamService = DreamsService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,15 +22,16 @@ final class EditorViewController: UIViewController, UIAdaptivePresentationContro
 
         let swiftuiView = UIHostingController(
            rootView: EditorView(
-            blocks: blocks,
-            onTextFormattingTapped: showTextFormattion,
-            onListTapped: addChecklist,
-            onCapturePhoto: capturePhoto,
-            onSelectPhoto: selectPhoto,
-            onBackgroundTapped: onBakgroundTapped,
-            onSelectBlock: onSelectBlock,
-            onEmptyDelete: deleteBlock,
-            onURLSFind: onURLSFind
+                blocks: blocks,
+                onTextFormattingTapped: showTextFormattion,
+                onListTapped: addChecklist,
+                onCapturePhoto: capturePhoto,
+                onSelectPhoto: selectPhoto,
+                onBackgroundTapped: onBakgroundTapped,
+                onSelectBlock: onSelectBlock,
+                onEmptyDelete: deleteBlock,
+                onURLSFind: onURLSFind,
+                onFinish: finish
            )
         )
         selectedBlockID = blocks.blocks.first!.id
@@ -36,11 +40,27 @@ final class EditorViewController: UIViewController, UIAdaptivePresentationContro
     }
 
     var imagePicker: ImagePicker!
+
+    private func finish() {
+        blocks.blocks = dreamService.getDream()
+        return
+//        onFinish?()
+
+        let a = blocks.blocks.reduce(into: [BlockCodable]()) { arr, block in
+            arr.append(BlockMapper.map(block: block))
+        }
+        dreamService.saveDream(
+            block: a
+        )
+        
+    }
+
     private func capturePhoto() {
         self.imagePicker = ImagePicker(presentationController: self, delegate: self)
         imagePicker.present(from: view, with: .camera, onPresent: nil)
         
     }
+
     func didSelect(image: UIImage?) {
         guard let image = image else {
             return
