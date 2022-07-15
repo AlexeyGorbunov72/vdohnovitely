@@ -4,16 +4,17 @@ import Combine
 import SwiftUI
 //import Firebase
 
-protocol AuthorizationListener: AnyObject {
+//protocol AuthorizationListener: AnyObject {
+//
+//    func authorizationIsEnded()
+//}
 
-    func authorizationIsEnded()
-}
-
-class AppCoordinator: NSObject, AuthorizationListener {
+class AppCoordinator: NSObject{ //, AuthorizationListener {
     private let window: UIWindow
     private let tabBar = TabBar.shared
 
    // private var authView = AuthorizationView()
+
     private let curiosityCoordinator = CuriosityCoordinator()
     private let goalsCoordinator = GoalsCoordinator()
     private let dreamsCoordinator = DreamsCoordinator()
@@ -29,13 +30,19 @@ class AppCoordinator: NSObject, AuthorizationListener {
         window.makeKeyAndVisible()
     }
 
+    var vc: UIHostingController<TextFormatterMenu>? = nil
+    var a: EditorViewController?
     init(window: UIWindow) {
         self.window = window
         super.init()
+        let a = EditorViewController()
+        window.rootViewController = a
+        self.a = a
+
 
 //        showAuthorization(window: window)
         
-        window.rootViewController = navVC
+//        window.rootViewController = navVC
         window.makeKeyAndVisible()
 
         navVC.setViewControllers([curiosityCoordinator.container], animated: false)
