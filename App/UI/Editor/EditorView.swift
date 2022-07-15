@@ -15,6 +15,7 @@ struct EditorView: View {
     let onSelectBlock: ((UUID) -> Void)?
     let onEmptyDelete: ((UUID) -> Void)?
     let onURLSFind: ((UUID, [URL]) -> Void)?
+    let onFinish: Action?
 
     var ochko: some View {
         ZStack(alignment: .bottom) {
