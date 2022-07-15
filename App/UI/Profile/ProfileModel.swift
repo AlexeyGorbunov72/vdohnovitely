@@ -24,9 +24,9 @@ struct ChartsStatModel {
 
 extension ProfileModel {
   static let stub = ProfileModel(
-    name: "Залупа",
-    familyName: "Залупа",
-    about: "Я дрочу 10 минут подряд и люблю айфон",
+    name: "Алексей",
+    familyName: "Геннадиевич",
+    about: "Ещё очень люблю хорошую погоду. Когда просыпаешься, а сквозь ещё закрытые веки солнечные лучи. Вот это я люблю!",
     image: VdohnovitelyAsset.profileTestImage.image,
     achievements: [
       AchievementModel(
