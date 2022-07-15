@@ -62,7 +62,7 @@ struct GoalsCardView: View {
                       }
                     }
                     .onTapGesture {
-                      goalsManager.publisher.send(.tapOnTask(task.id))
+                      goalsManager.publisher.send(.tapOnTask(task.id, model.id))
                     }
                   }
                 }

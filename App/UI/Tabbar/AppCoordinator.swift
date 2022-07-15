@@ -35,14 +35,13 @@ class AppCoordinator: NSObject{ //, AuthorizationListener {
     init(window: UIWindow) {
         self.window = window
         super.init()
-        let a = EditorViewController()
-        window.rootViewController = a
-        self.a = a
+
+//        self.a = a
 
 
 //        showAuthorization(window: window)
         
-//        window.rootViewController = navVC
+        window.rootViewController = navVC
         window.makeKeyAndVisible()
 
         navVC.setViewControllers([curiosityCoordinator.container], animated: false)

@@ -7,7 +7,7 @@ final class GoalsManager {
 
   enum Event {
     case tapOnCard(Int)
-    case tapOnTask(Int)
+    case tapOnTask(Int, Int)
   }
 
   let publisher = PassthroughSubject<Event, Never>()

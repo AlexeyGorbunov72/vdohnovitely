@@ -42,7 +42,7 @@ final class EditorViewController: UIViewController, UIAdaptivePresentationContro
     var imagePicker: ImagePicker!
 
     private func finish() {
-        blocks.blocks = dreamService.getDream()
+        dismiss(animated: true)
         return
 //        onFinish?()
 

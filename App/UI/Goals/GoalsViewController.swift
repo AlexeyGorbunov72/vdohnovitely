@@ -3,6 +3,92 @@ import UIKit
 import SnapKit
 import SwiftUI
 
+var dictAA: [Int: EditorViewController] = [
+    0: EditorViewController(),
+    1: EditorViewController(),
+    2: EditorViewController(),
+    3: EditorViewController(),
+]
+
+let modelCards = [
+    GoalsCardModel(
+        id: 0,
+        name: "100 Отжиманий до 5 июля",
+        createDate: "14.06",
+        tasks: [
+            GoalsTaskModel(
+                id: 1,
+                name: "10 отжиманий",
+                deadLineDate: "19.06",
+                taskTimeStatus: .completed,
+                isCompleted: true
+            ),
+            GoalsTaskModel(
+                id: 2,
+                name: "30 отжиманий",
+                deadLineDate: "3.07",
+                taskTimeStatus: .overtimed,
+                isCompleted: false
+            ),
+            GoalsTaskModel(
+                id: 3,
+                name: "40 отжиманий",
+                deadLineDate: "4.07",
+                taskTimeStatus: .closeToDeadline,
+                isCompleted: false
+            ),
+            GoalsTaskModel(
+                id: 4,
+                name: "100 отжиманий",
+                deadLineDate: "5.07",
+                taskTimeStatus: .normal,
+                isCompleted: false
+            )
+        ]
+    ),
+    GoalsCardModel(
+        id: 1,
+        name: "100 Отжиманий до 5 июля",
+        createDate: nil,
+        tasks: nil
+    ),
+    GoalsCardModel(
+        id: 2,
+        name: "100 Отжиманий до 5 июля",
+        createDate: "14.06",
+        tasks: [
+            GoalsTaskModel(
+                id: 1,
+                name: "10 отжиманий",
+                deadLineDate: "19.06",
+                taskTimeStatus: .completed,
+                isCompleted: true
+            ),
+            GoalsTaskModel(
+                id: 2,
+                name: "30 отжиманий",
+                deadLineDate: "3.07",
+                taskTimeStatus: .overtimed,
+                isCompleted: false
+            ),
+            GoalsTaskModel(
+                id: 3,
+                name: "40 отжиманий",
+                deadLineDate: "4.07",
+                taskTimeStatus: .closeToDeadline,
+                isCompleted: false
+            ),
+            GoalsTaskModel(
+                id: 4,
+                name: "100 отжиманий",
+                deadLineDate: "5.07",
+                taskTimeStatus: .normal,
+                isCompleted: false
+            )
+        ]
+    )
+]
+
 final class GoalsViewController: UIViewController {
     let goalsManager = GoalsManager.shared
 
@@ -11,7 +97,7 @@ final class GoalsViewController: UIViewController {
     )
 
     let goalsScreen = UIHostingController(
-        rootView: GoalsScreen(model: [.stub2, .stub, .stub3]) // Передавать реальные данные
+        rootView: GoalsScreen(model: modelCards) // Передавать реальные данные
     )
     
     override func viewDidLoad() {
@@ -20,10 +106,12 @@ final class GoalsViewController: UIViewController {
         goalsManager.publisher
             .sink { event in
                 switch event {
-                case let .tapOnTask(id):
-                    print("\(id)")
+                case let .tapOnTask(taskId, _):
+                    print("Zalupa\(taskId)")
+//                    modelCards[cardID].tasks?[taskId - 1].isCompleted = !modelCards[cardID].tasks?[taskId - 1].isCompleted
                 case let .tapOnCard(id):
-                    print("\(id)")
+                    dictAA[id]!.modalPresentationStyle = .fullScreen
+                    self.navigationController?.present(dictAA[id]!, animated: true)
                 }
             }
             .store(in: &disposable)

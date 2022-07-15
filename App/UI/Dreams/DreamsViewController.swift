@@ -3,6 +3,14 @@ import UIKit
 import SnapKit
 import SwiftUI
 
+let dreamsEditing = EditorViewController()
+
+var dictA: [Int: EditorViewController] = [
+    0: EditorViewController(),
+    1: EditorViewController(),
+    2: EditorViewController(),
+    3: EditorViewController(),
+]
 final class DreamsViewController: UIViewController {
     let dreamManager = DreamsManager.shared
 
@@ -21,7 +29,8 @@ final class DreamsViewController: UIViewController {
             .sink { event in
                 switch event {
                 case let .tapOnCard(id):
-                    print("\(id)")
+                    dictA[id]!.modalPresentationStyle = .fullScreen
+                    self.navigationController?.present(dictA[id]!, animated: true)
                 }
             }
             .store(in: &disposable)
