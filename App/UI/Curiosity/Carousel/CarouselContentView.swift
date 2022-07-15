@@ -3,9 +3,11 @@ import SwiftUI
 
 struct CarouselContentView: View {
 
+    weak var delegate: CarouselViewProtocol?
+
     var body: some View {
         ScrollView {
-            CarouselView()
+            CarouselView(delegate: delegate)
         }
     }
 }

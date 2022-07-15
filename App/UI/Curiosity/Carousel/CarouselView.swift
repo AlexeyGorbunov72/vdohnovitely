@@ -1,39 +1,54 @@
 import Foundation
 import SwiftUI
 
+protocol CarouselViewProtocol: AnyObject {
+
+    func showDetailView(category: CaregoryModel)
+}
+
 struct CarouselView: View {
+
+    weak var delegate: CarouselViewProtocol?
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: 16) {
-                ForEach(categories) { num in
+                Spacer()
+                    .frame(width: 50)
+
+                ForEach(categories) { category in
                     GeometryReader { proxy in
                         let scale = getScale(proxy: proxy)
                         VStack(spacing: 8) {
                             ZStack {
-                                Image(num.imageName)
+                                Image(category.imageName)
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 200)
                                     .clipped()
                                     .cornerRadius(8)
 
+                                Color(.black.withAlphaComponent(0.5))
+                                    .cornerRadius(8)
+
                                 VStack(alignment: .leading) {
                                     HStack {
-                                        Text(num.title)
-                                            .font(.system(size: 23, weight: .semibold))
+                                        Text(category.title)
+                                            .font(.system(size: 20, weight: .semibold))
                                             .foregroundColor(.white)
                                         Spacer()
                                     }
-                                    .padding([.top, .leading], 17)
+                                    .padding([.leading], 17)
+                                    .padding([.top], 25)
 
                                     HStack {
-                                        Text(num.text)
-                                            .font(.system(size: 15, weight: .regular))
+                                        Text(category.text)
+                                            .font(.system(size: 12, weight: .regular))
                                             .foregroundColor(.white)
                                         Spacer()
                                     }
                                     .padding([.leading], 20)
+                                    .padding([.top], 3)
 
                                     Spacer()
                                 }
@@ -43,13 +58,16 @@ struct CarouselView: View {
                         .animation(.easeOut(duration: 1))
                         .padding(.vertical)
                         .onTapGesture {
-                            print(num.id)
+                            delegate?.showDetailView(category: category)
                         }
                     }
                     .frame(width: 175, height: 400)
                     .padding(.horizontal, 32)
                     .padding(.vertical, 32)
                 }
+
+                Spacer()
+                    .frame(width: 50)
             }
             .frame(height: 600)
         }
@@ -70,4 +88,10 @@ struct CarouselView: View {
 
         return scale
     }
+}
+
+struct VisualEffectView: UIViewRepresentable {
+    var effect: UIVisualEffect?
+    func makeUIView(context: UIViewRepresentableContext<Self>) -> UIVisualEffectView { UIVisualEffectView() }
+    func updateUIView(_ uiView: UIVisualEffectView, context: UIViewRepresentableContext<Self>) { uiView.effect = effect }
 }
