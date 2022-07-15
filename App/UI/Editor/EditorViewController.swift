@@ -126,7 +126,12 @@ final class EditorViewController: UIViewController, UIAdaptivePresentationContro
 
     private func onBakgroundTapped() {
         guard let block = blocks.blocks.first(where: { $0.id == selectedBlockID }) else { return }
-        guard block.textBlock.text.length > 0 else { return }
+
+        if block.checklistBlock != nil {
+            guard !block.checklistBlock.points.isEmpty else { return }
+        } else if block.textBlock != nil {
+            guard block.textBlock.text.length > 0 else { return }
+        }
 
         let newBlock = Block(blockType: .text(.init(text: NSAttributedString(string: ""), isResponder: true, font: UIFont.preferredFont(forTextStyle: .footnote)
 )))
@@ -185,7 +190,21 @@ final class EditorViewController: UIViewController, UIAdaptivePresentationContro
     }
 
     private func addChecklist() {
-        
+        blocks.blocks.append(
+            Block(
+                blockType: .checklist(
+                    ChecklistBlock(
+                        points: [
+                            ChecklistItem(
+                                id: UUID(),
+                                text: TextBlock(text: NSAttributedString(""), font: .systemFont(ofSize: 12)),
+                                isDone: false
+                            )
+                        ]
+                    )
+                )
+            )
+        )
     }
 
     private func deleteBlock(_ id: UUID) {
